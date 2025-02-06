@@ -3,7 +3,8 @@ let canvas, ctx;
 let bulldozer, satellite;
 let score = 0;
 let hitSound;
-let speedMultiplier = 2; // 🔥 Increase Speed for Touch
+let speedMultiplier = 2; // 🔥 Faster Movement
+let moveDirection = null; // 🔥 Track Movement for Touch Hold
 
 // ✅ Load Game on Window Load
 window.onload = function () {
@@ -15,15 +16,25 @@ window.onload = function () {
     bulldozer = { x: 50, y: 250, width: 80, height: 40, speed: 5 };
     satellite = { x: 400, y: 200, width: 100, height: 60 };
 
-    // ✅ Add Mobile Touch Controls (🔥 Faster Response)
-    document.getElementById("up").ontouchstart = () => moveBulldozer("up");
-    document.getElementById("down").ontouchstart = () => moveBulldozer("down");
-    document.getElementById("left").ontouchstart = () => moveBulldozer("left");
-    document.getElementById("right").ontouchstart = () => moveBulldozer("right");
+    // ✅ Add Mobile Touch Controls (🔥 Hold to Move)
+    document.getElementById("up").ontouchstart = () => (moveDirection = "up");
+    document.getElementById("down").ontouchstart = () => (moveDirection = "down");
+    document.getElementById("left").ontouchstart = () => (moveDirection = "left");
+    document.getElementById("right").ontouchstart = () => (moveDirection = "right");
+
+    document.getElementById("up").ontouchend = stopMovement;
+    document.getElementById("down").ontouchend = stopMovement;
+    document.getElementById("left").ontouchend = stopMovement;
+    document.getElementById("right").ontouchend = stopMovement;
 
     // ✅ Start Game Loop
-    setInterval(updateGame, 20); // 🔥 Faster Game Loop
+    setInterval(updateGame, 20);
 };
+
+// ✅ Stop Movement (When Touch Released)
+function stopMovement() {
+    moveDirection = null;
+}
 
 // ✅ Update Game (Runs Every 20ms)
 function updateGame() {
@@ -51,17 +62,20 @@ function updateGame() {
         destroySatellite();
     }
 
+    // 🔥 Move if Button is Held
+    if (moveDirection) moveBulldozer(moveDirection);
+
     // 🏆 Draw Score
     ctx.fillStyle = "black";
     ctx.fillText("Mujib CDI: " + score, 10, 20);
 }
 
-// ✅ Move Bulldozer (Arrow Keys & Touch)
+// ✅ Move Bulldozer (Arrow Keys & Touch Hold)
 document.addEventListener("keydown", function (event) {
     moveBulldozer(event.key.replace("Arrow", "").toLowerCase());
 });
 
-// ✅ Move Bulldozer (For Mobile & PC)
+// ✅ Move Bulldozer
 function moveBulldozer(direction) {
     let moveSpeed = bulldozer.speed * speedMultiplier; // 🔥 Faster Movement
     if (direction === "up" && bulldozer.y > 0) bulldozer.y -= moveSpeed;
