@@ -3,6 +3,7 @@ let canvas, ctx;
 let bulldozer, satellite;
 let score = 0;
 let hitSound;
+let speedMultiplier = 2; // 🔥 Increase Speed for Touch
 
 // ✅ Load Game on Window Load
 window.onload = function () {
@@ -14,17 +15,17 @@ window.onload = function () {
     bulldozer = { x: 50, y: 250, width: 80, height: 40, speed: 5 };
     satellite = { x: 400, y: 200, width: 100, height: 60 };
 
-    // ✅ Add Mobile Touch Controls
-    document.getElementById("up").addEventListener("click", () => moveBulldozer("up"));
-    document.getElementById("down").addEventListener("click", () => moveBulldozer("down"));
-    document.getElementById("left").addEventListener("click", () => moveBulldozer("left"));
-    document.getElementById("right").addEventListener("click", () => moveBulldozer("right"));
+    // ✅ Add Mobile Touch Controls (🔥 Faster Response)
+    document.getElementById("up").ontouchstart = () => moveBulldozer("up");
+    document.getElementById("down").ontouchstart = () => moveBulldozer("down");
+    document.getElementById("left").ontouchstart = () => moveBulldozer("left");
+    document.getElementById("right").ontouchstart = () => moveBulldozer("right");
 
     // ✅ Start Game Loop
-    setInterval(updateGame, 30);
+    setInterval(updateGame, 20); // 🔥 Faster Game Loop
 };
 
-// ✅ Update Game (Runs Every 30ms)
+// ✅ Update Game (Runs Every 20ms)
 function updateGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -60,12 +61,13 @@ document.addEventListener("keydown", function (event) {
     moveBulldozer(event.key.replace("Arrow", "").toLowerCase());
 });
 
-// ✅ Move Bulldozer (For Mobile Buttons)
+// ✅ Move Bulldozer (For Mobile & PC)
 function moveBulldozer(direction) {
-    if (direction === "up" && bulldozer.y > 0) bulldozer.y -= bulldozer.speed;
-    if (direction === "down" && bulldozer.y < canvas.height - bulldozer.height) bulldozer.y += bulldozer.speed;
-    if (direction === "left" && bulldozer.x > 0) bulldozer.x -= bulldozer.speed;
-    if (direction === "right" && bulldozer.x < canvas.width - bulldozer.width) bulldozer.x += bulldozer.speed;
+    let moveSpeed = bulldozer.speed * speedMultiplier; // 🔥 Faster Movement
+    if (direction === "up" && bulldozer.y > 0) bulldozer.y -= moveSpeed;
+    if (direction === "down" && bulldozer.y < canvas.height - bulldozer.height) bulldozer.y += moveSpeed;
+    if (direction === "left" && bulldozer.x > 0) bulldozer.x -= moveSpeed;
+    if (direction === "right" && bulldozer.x < canvas.width - bulldozer.width) bulldozer.x += moveSpeed;
 }
 
 // ✅ Destroy Satellite & Respawn (Plays Sound)
