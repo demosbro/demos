@@ -4,15 +4,18 @@
     <title>Bulldozer vs. Muzib Satellite</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"> 
     <style>
-        body { text-align: center; font-family: Arial, sans-serif; touch-action: manipulation; }
-        canvas { border: 1px solid black; display: block; margin: 10px auto; }
-        
-        .controls { margin-top: 10px; }
+        * { margin: 0; padding: 0; overflow: hidden; touch-action: manipulation; }
+        body { font-family: Arial, sans-serif; text-align: center; background: #eee; }
+
+        canvas { display: block; width: 100vw; height: 100vh; background: white; }
+
+        .controls {
+            position: fixed; bottom: 10px; width: 100%; text-align: center;
+        }
         button {
             width: 60px; height: 60px; font-size: 20px; 
             margin: 5px; border: none; background: #444; color: white; 
-            border-radius: 10px; cursor: pointer;
-            user-select: none; /* ✅ Disable Text Selection */
+            border-radius: 10px; cursor: pointer; user-select: none;
         }
         button:focus { outline: none; }
         
@@ -20,12 +23,12 @@
     </style>
 </head>
 <body>
-    <h2>Bulldozer vs. Muzib Satellite</h2>
-    <canvas id="gameCanvas" width="600" height="400"></canvas>
+    <canvas id="gameCanvas"></canvas>
 
-    <!-- ✅ Mobile Touch Controls -->
+    <!-- ✅ Mobile Controls -->
     <div class="controls">
         <button id="up">⬆️</button>
+        <br>
         <button id="left">⬅️</button>
         <button id="down">⬇️</button>
         <button id="right">➡️</button>
@@ -33,7 +36,7 @@
 
     <!-- ✅ Sound Effect -->
     <audio id="hitSound">
-        <source src="https://us-tuna-sounds-files.voicemod.net/169b3fb2-8bab-46c3-a2a8-ef5d0f5c9ead-1659016299387.mp3" type="audio/mpeg">
+        <source src="YOUR_SOUND_LINK_HERE.mp3" type="audio/mpeg">
     </audio>
 
     <script src="game.js"></script>
