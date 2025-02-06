@@ -3,8 +3,9 @@ let canvas, ctx;
 let bulldozer, satellite;
 let score = 0;
 let hitSound;
-let speedMultiplier = 2; // 🔥 Faster Movement
-let moveDirection = null; // 🔥 Track Movement for Touch Hold
+let speedMultiplier = 2;
+let moveDirection = null; 
+let holdInterval; // 🔥 Continuous Movement Variable
 
 // ✅ Load Game on Window Load
 window.onload = function () {
@@ -16,24 +17,30 @@ window.onload = function () {
     bulldozer = { x: 50, y: 250, width: 80, height: 40, speed: 5 };
     satellite = { x: 400, y: 200, width: 100, height: 60 };
 
-    // ✅ Add Mobile Touch Controls (🔥 Hold to Move)
-    document.getElementById("up").ontouchstart = () => (moveDirection = "up");
-    document.getElementById("down").ontouchstart = () => (moveDirection = "down");
-    document.getElementById("left").ontouchstart = () => (moveDirection = "left");
-    document.getElementById("right").ontouchstart = () => (moveDirection = "right");
-
-    document.getElementById("up").ontouchend = stopMovement;
-    document.getElementById("down").ontouchend = stopMovement;
-    document.getElementById("left").ontouchend = stopMovement;
-    document.getElementById("right").ontouchend = stopMovement;
+    // ✅ Add Mobile Touch Controls (Hold to Move)
+    addTouchControl("up", "up");
+    addTouchControl("down", "down");
+    addTouchControl("left", "left");
+    addTouchControl("right", "right");
 
     // ✅ Start Game Loop
     setInterval(updateGame, 20);
 };
 
-// ✅ Stop Movement (When Touch Released)
-function stopMovement() {
-    moveDirection = null;
+// ✅ Function to Handle Touch Hold (Continuous Movement)
+function addTouchControl(buttonId, direction) {
+    let button = document.getElementById(buttonId);
+    
+    button.ontouchstart = function (event) {
+        event.preventDefault(); // 🔥 Prevent Copy-Paste Popup
+        moveDirection = direction;
+        holdInterval = setInterval(() => moveBulldozer(direction), 50); // 🔥 Keep Moving
+    };
+
+    button.ontouchend = function () {
+        moveDirection = null;
+        clearInterval(holdInterval); // ⏹️ Stop Moving
+    };
 }
 
 // ✅ Update Game (Runs Every 20ms)
@@ -62,9 +69,6 @@ function updateGame() {
         destroySatellite();
     }
 
-    // 🔥 Move if Button is Held
-    if (moveDirection) moveBulldozer(moveDirection);
-
     // 🏆 Draw Score
     ctx.fillStyle = "black";
     ctx.fillText("Mujib CDI: " + score, 10, 20);
@@ -77,7 +81,7 @@ document.addEventListener("keydown", function (event) {
 
 // ✅ Move Bulldozer
 function moveBulldozer(direction) {
-    let moveSpeed = bulldozer.speed * speedMultiplier; // 🔥 Faster Movement
+    let moveSpeed = bulldozer.speed * speedMultiplier;
     if (direction === "up" && bulldozer.y > 0) bulldozer.y -= moveSpeed;
     if (direction === "down" && bulldozer.y < canvas.height - bulldozer.height) bulldozer.y += moveSpeed;
     if (direction === "left" && bulldozer.x > 0) bulldozer.x -= moveSpeed;
