@@ -1,34 +1,32 @@
-
-
-// ✅ Scene Setup
+// ✅ No import needed, Three.js is loaded globally from index.html
 let scene, camera, renderer;
-let bulldozer, drills, satellite;
+let bulldozer, drills = [], satellite;
 
 function init() {
-    // Scene
+    // ✅ Create Scene
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x87CEEB); // Sky blue
 
-    // Camera
+    // ✅ Create Camera
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 5, 10);
 
-    // Renderer
+    // ✅ Create Renderer
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // ✅ Bulldozer with Drills
+    // ✅ Create Bulldozer Body
     let bulldozerBody = new THREE.BoxGeometry(2, 1, 3);
     let bulldozerMaterial = new THREE.MeshBasicMaterial({ color: 0xffcc00 });
     bulldozer = new THREE.Mesh(bulldozerBody, bulldozerMaterial);
     bulldozer.position.set(0, 0, 0);
     scene.add(bulldozer);
 
-    // ✅ Drills
+    // ✅ Create Bulldozer Drills
     let drillGeometry = new THREE.CylinderGeometry(0.3, 0.1, 2, 8);
     let drillMaterial = new THREE.MeshBasicMaterial({ color: 0x555555 });
-    
+
     let drillLeft = new THREE.Mesh(drillGeometry, drillMaterial);
     drillLeft.position.set(-1.2, -0.5, 1.5);
     drillLeft.rotation.z = Math.PI / 2;
@@ -41,14 +39,14 @@ function init() {
 
     drills = [drillLeft, drillRight];
 
-    // ✅ Muzib Satellite
+    // ✅ Create Muzib Satellite
     let satelliteGeometry = new THREE.SphereGeometry(1, 16, 16);
     let satelliteMaterial = new THREE.MeshBasicMaterial({ color: 0x808080 });
     satellite = new THREE.Mesh(satelliteGeometry, satelliteMaterial);
     satellite.position.set(0, 3, -5);
     scene.add(satellite);
 
-    // ✅ Add Light
+    // ✅ Add Lighting
     let light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(5, 10, 7);
     scene.add(light);
@@ -57,7 +55,7 @@ function init() {
     animate();
 }
 
-// ✅ Movement Controls
+// ✅ Bulldozer Movement Controls
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowUp') bulldozer.position.z -= 0.2;
     if (event.key === 'ArrowDown') bulldozer.position.z += 0.2;
