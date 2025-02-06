@@ -31,7 +31,7 @@ function updateGame() {
     ctx.fillStyle = "gray";
     ctx.fillRect(satellite.x, satellite.y, satellite.width, satellite.height);
     ctx.fillStyle = "black";
-    ctx.fillText("Muzib Satellite", satellite.x + 10, satellite.y + 35);
+    ctx.fillText("muzib Satellite", satellite.x + 10, satellite.y + 35);
 
     // 🎯 Check for Collision
     if (
@@ -45,7 +45,7 @@ function updateGame() {
 
     // 🏆 Draw Score
     ctx.fillStyle = "black";
-    ctx.fillText("Mujib CDI: " + score, 10, 20);
+    ctx.fillText("hasina cdi: " + score, 10, 20);
 }
 
 // ✅ Destroy Satellite & Respawn
