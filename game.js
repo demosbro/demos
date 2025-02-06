@@ -1,91 +1,64 @@
-// ✅ No import needed, Three.js is loaded globally from index.html
-let scene, camera, renderer;
-let bulldozer, drills = [], satellite;
+// ✅ Game Variables
+let canvas, ctx;
+let bulldozer, satellite;
+let score = 0;
 
-function init() {
-    // ✅ Create Scene
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x87CEEB); // Sky blue
+// ✅ Load Game on Window Load
+window.onload = function () {
+    canvas = document.getElementById("gameCanvas");
+    ctx = canvas.getContext("2d");
 
-    // ✅ Create Camera
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 5, 10);
+    // ✅ Initialize Objects
+    bulldozer = { x: 50, y: 250, width: 80, height: 40, speed: 5 };
+    satellite = { x: 400, y: 200, width: 100, height: 60 };
 
-    // ✅ Create Renderer
-    renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+    // ✅ Start Game Loop
+    setInterval(updateGame, 30);
+};
 
-    // ✅ Create Bulldozer Body
-    let bulldozerBody = new THREE.BoxGeometry(2, 1, 3);
-    let bulldozerMaterial = new THREE.MeshBasicMaterial({ color: 0xffcc00 });
-    bulldozer = new THREE.Mesh(bulldozerBody, bulldozerMaterial);
-    bulldozer.position.set(0, 0, 0);
-    scene.add(bulldozer);
+// ✅ Update Game (Runs Every 30ms)
+function updateGame() {
+    // 🔥 Clear Screen
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // ✅ Create Bulldozer Drills
-    let drillGeometry = new THREE.CylinderGeometry(0.3, 0.1, 2, 8);
-    let drillMaterial = new THREE.MeshBasicMaterial({ color: 0x555555 });
+    // 🎨 Draw Bulldozer
+    ctx.fillStyle = "yellow";
+    ctx.fillRect(bulldozer.x, bulldozer.y, bulldozer.width, bulldozer.height);
+    ctx.fillStyle = "black";
+    ctx.fillText("🚜", bulldozer.x + 20, bulldozer.y + 25);
 
-    let drillLeft = new THREE.Mesh(drillGeometry, drillMaterial);
-    drillLeft.position.set(-1.2, -0.5, 1.5);
-    drillLeft.rotation.z = Math.PI / 2;
-    scene.add(drillLeft);
+    // 🎨 Draw Muzib Satellite
+    ctx.fillStyle = "gray";
+    ctx.fillRect(satellite.x, satellite.y, satellite.width, satellite.height);
+    ctx.fillStyle = "black";
+    ctx.fillText("Muzib Satellite", satellite.x + 10, satellite.y + 35);
 
-    let drillRight = new THREE.Mesh(drillGeometry, drillMaterial);
-    drillRight.position.set(1.2, -0.5, 1.5);
-    drillRight.rotation.z = Math.PI / 2;
-    scene.add(drillRight);
-
-    drills = [drillLeft, drillRight];
-
-    // ✅ Create Muzib Satellite
-    let satelliteGeometry = new THREE.SphereGeometry(1, 16, 16);
-    let satelliteMaterial = new THREE.MeshBasicMaterial({ color: 0x808080 });
-    satellite = new THREE.Mesh(satelliteGeometry, satelliteMaterial);
-    satellite.position.set(0, 3, -5);
-    scene.add(satellite);
-
-    // ✅ Add Lighting
-    let light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(5, 10, 7);
-    scene.add(light);
-
-    // ✅ Start Animation
-    animate();
-}
-
-// ✅ Bulldozer Movement Controls
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowUp') bulldozer.position.z -= 0.2;
-    if (event.key === 'ArrowDown') bulldozer.position.z += 0.2;
-    if (event.key === 'ArrowLeft') bulldozer.position.x -= 0.2;
-    if (event.key === 'ArrowRight') bulldozer.position.x += 0.2;
-
-    // ✅ Check for Collision with Satellite
-    let distance = bulldozer.position.distanceTo(satellite.position);
-    if (distance < 1.5) {
+    // 🎯 Check for Collision
+    if (
+        bulldozer.x + bulldozer.width > satellite.x &&
+        bulldozer.x < satellite.x + satellite.width &&
+        bulldozer.y + bulldozer.height > satellite.y &&
+        bulldozer.y < satellite.y + satellite.height
+    ) {
         destroySatellite();
     }
-});
 
-// ✅ Destroy Satellite Function
+    // 🏆 Draw Score
+    ctx.fillStyle = "black";
+    ctx.fillText("Mujib CDI: " + score, 10, 20);
+}
+
+// ✅ Destroy Satellite & Respawn
 function destroySatellite() {
-    scene.remove(satellite); // Remove satellite from scene
-    console.log("💥 Muzib Satellite Destroyed!");
+    score++; // Add Point
+    satellite.x = Math.random() * (canvas.width - 100) + 100; // New Position
+    satellite.y = Math.random() * (canvas.height - 60);
 }
 
-// ✅ Animation Loop
-function animate() {
-    requestAnimationFrame(animate);
-    
-    // ✅ Rotate Drills
-    drills.forEach(drill => {
-        drill.rotation.y += 0.1;
-    });
-
-    renderer.render(scene, camera);
-}
-
-// ✅ Start the Game
-window.onload = init;
+// ✅ Control Bulldozer
+document.addEventListener("keydown", function (event) {
+    if (event.key === "ArrowUp" && bulldozer.y > 0) bulldozer.y -= bulldozer.speed;
+    if (event.key === "ArrowDown" && bulldozer.y < canvas.height - bulldozer.height) bulldozer.y += bulldozer.speed;
+    if (event.key === "ArrowLeft" && bulldozer.x > 0) bulldozer.x -= bulldozer.speed;
+    if (event.key === "ArrowRight" && bulldozer.x < canvas.width - bulldozer.width) bulldozer.x += bulldozer.speed;
+});
