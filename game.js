@@ -1,5 +1,4 @@
-// ✅ Import Three.js (Make sure it's included in index.html)
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.140.0/build/three.module.js';
+
 
 // ✅ Scene Setup
 let scene, camera, renderer;
