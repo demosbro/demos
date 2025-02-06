@@ -38,7 +38,7 @@ function updateGame() {
     ctx.fillStyle = "gray";
     ctx.fillRect(satellite.x, satellite.y, satellite.width, satellite.height);
     ctx.fillStyle = "black";
-    ctx.fillText("Muzib Satellite", satellite.x + 10, satellite.y + 35);
+    ctx.fillText("🛰️","Muzib Satellite", satellite.x + 10, satellite.y + 35);
 
     // 🎯 Check for Collision
     if (
